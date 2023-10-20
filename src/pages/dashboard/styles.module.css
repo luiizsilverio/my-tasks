@@ -1,0 +1,56 @@
+.container {
+  width: 100%;
+}
+
+.content {
+  background-color: var(--COR_BLACK);
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.formContainer {
+  max-width: var(--MAX_WIDTH);
+  width: 100%;
+  padding: 0 18px;
+  padding-bottom: 28px;
+  margin-top: 58px;
+}
+
+.title {
+  color: #fff;
+  margin-bottom: 8px;
+}
+
+.checkboxArea label {
+  margin-left: 8px;
+  color: #fff;
+}
+
+.checkboxArea {
+  margin: 14px 0;
+  display: flex;
+  align-items: center;
+}
+
+.checkbox {
+  width: 18px;
+  height: 18px;
+}
+
+.button {
+  width: 300px;
+  border: 0;
+  border-radius: 4px;
+  color: #fff;
+  background-color: var(--COR_AZUL);
+  padding: 12px 0;
+  font-size: 18px;
+  transition: all .2s;
+}
+
+.button:hover, .button:active {
+  filter: brightness(1.08);
+  transform: scaleX(1.03);
+}

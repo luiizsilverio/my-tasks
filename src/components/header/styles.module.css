@@ -10,7 +10,7 @@
 .content {
   padding: 0 18px;
   width: 100%;
-  max-width: 1024px;
+  max-width: var(--MAX_WIDTH);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -37,11 +37,11 @@
   color: #fff;
   border: 1.5px solid #fff;
   cursor: pointer;
-  transition: all .2s;
+  transition: all 0.5s;
 }
 
 .loginBtn:hover {
-  transform: scale(1.08);
+  transform: scaleX(1.04);
   background-color: #fff;
   color: var(--COR_BLACK);
   font-weight: bold;
@@ -53,9 +53,15 @@
 }
 
 .link {
-  background-color: #f1f1f1;
-  color: var(--COR_BLACK);
+  background-color: var(--COR_VERDE_2); /* #f1f1f1; */
+  color: #fff; /* var(--COR_BLACK); */
   padding: 4px 14px;
   border-radius: 4px;
   margin: 0 14px;
+  transition: all .4s;
+}
+
+.link:hover {
+  filter: brightness(1.05);
+  transform: scaleX(1.04);
 }
