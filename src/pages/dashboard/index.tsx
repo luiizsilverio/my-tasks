@@ -1,9 +1,20 @@
-import { ChangeEvent, FormEvent, useState } from 'react';
+import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import { GetServerSideProps } from 'next';
 import { getSession } from 'next-auth/react';
-import { addDoc, collection } from 'firebase/firestore';
-import { FaShare, FaTrash } from 'react-icons/fa';
+import Link from 'next/link';
 import Head from 'next/head';
+import { FaShare, FaTrash } from 'react-icons/fa';
+
+import {
+  doc,
+  deleteDoc,
+  addDoc,
+  collection,
+  query,
+  orderBy,
+  where,
+  onSnapshot
+} from 'firebase/firestore';
 
 import styles from './styles.module.css';
 import Textarea from '@/components/textarea';
@@ -15,9 +26,18 @@ interface UserProps {
   }
 }
 
+interface ITask {
+  id: string;
+  tarefa: string;
+  user: string;
+  public: boolean;
+  created_at: Date;
+}
+
 export default function dashboard({ user }: UserProps) {
   const [input, setInput] = useState('');
   const [publicTask, setPublicTask] = useState(false);
+  const [tasks, setTasks] = useState<ITask[]>([]);
 
   function handleChangePublic(ev: ChangeEvent<HTMLInputElement>) {
     setPublicTask(ev.target.checked);
@@ -43,6 +63,45 @@ export default function dashboard({ user }: UserProps) {
       console.log(err);
     }
   }
+
+  async function handleDeleteTask(id: string) {
+    const docRef = doc(db, "tarefas", id);
+    await deleteDoc(docRef);
+  }
+
+  async function handleShare(id: string) {
+    await navigator.clipboard.writeText(`${process.env.NEXT_PUBLIC_URL}/task/${id}`);
+    alert('URL copiada!');
+  }
+
+  useEffect(() => {
+    async function loadTarefas() {
+      const taskRef = collection(db, "tarefas");
+      const qry = query(
+        taskRef,
+        orderBy("created_at", "desc"),
+        where("user", "==", user?.email)
+      )
+
+      onSnapshot(qry, (snapshot) => {
+        let lista: ITask[] = [];
+
+        snapshot.forEach((doc) => {
+          lista.push({
+            id: doc.id,
+            tarefa: doc.data().tarefa,
+            user: doc.data().user,
+            public: doc.data().public,
+            created_at: doc.data().created_at
+          })
+        })
+
+        setTasks(lista);
+      })
+    }
+
+    loadTarefas();
+  }, [user?.email])
 
   return (
     <div className={styles.container}>
@@ -78,20 +137,37 @@ export default function dashboard({ user }: UserProps) {
         <section className={styles.taskContainer}>
           <h1>Minhas Tarefas</h1>
 
-          <article className={styles.task}>
-            <div className={styles.tagContainer}>
-              <label className={styles.tag}>PÚBLICO</label>
-              <button className={styles.shareBtn}>
-                <FaShare size={22} color="var(--COR_AZUL)" />
-              </button>
-            </div>
+          {tasks.map((task) => (
+            <article key={task.id} className={styles.task}>
 
-            <div className={styles.taskContent}>
-              <p>Lorem ipsum dolor</p>
-              <button className={styles.trashBtn}></button>
-                <FaTrash size={22} color="var(--COR_VERMELHA)" />
-            </div>
-          </article>
+              {task.public && (
+                <div className={styles.tagContainer}>
+                  <label className={styles.tag}>PÚBLICO</label>
+                  <button className={styles.shareBtn} onClick={() => handleShare(task.id)}>
+                    <FaShare size={22} color="var(--COR_AZUL)" />
+                  </button>
+                </div>
+              )}
+
+              <div className={styles.taskContent}>
+
+                {task.public ? (
+                  <Link href={`/task/${task.id}`}>
+                    <p>{ task.tarefa }</p>
+                  </Link>
+                ) : (
+                  <p>{ task.tarefa }</p>
+                )}
+
+                <button
+                  className={styles.trashBtn}
+                  onClick={() => handleDeleteTask(task.id)}
+                >
+                  <FaTrash size={22} color="var(--COR_VERMELHA)" />
+                </button>
+              </div>
+            </article>
+          ))}
 
         </section>
       </main>
