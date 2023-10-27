@@ -65,8 +65,12 @@ export default function dashboard({ user }: UserProps) {
   }
 
   async function handleDeleteTask(id: string) {
-    const docRef = doc(db, "tarefas", id);
-    await deleteDoc(docRef);
+    try {
+      const docRef = doc(db, "tarefas", id);
+      await deleteDoc(docRef);
+    } catch(err) {
+      console.log(err);
+    }
   }
 
   async function handleShare(id: string) {
@@ -153,10 +157,10 @@ export default function dashboard({ user }: UserProps) {
 
                 {task.public ? (
                   <Link href={`/task/${task.id}`}>
-                    <p>{ task.tarefa }</p>
+                    <pre>{ task.tarefa }</pre>
                   </Link>
                 ) : (
-                  <p>{ task.tarefa }</p>
+                  <pre>{ task.tarefa }</pre>
                 )}
 
                 <button

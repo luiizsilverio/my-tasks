@@ -59,7 +59,7 @@
   margin: 34px auto 0;
   padding: 0 18px;
   width: 100%;
-  max-width: 1024px;
+  max-width: var(--MAX_WIDTH);
   display: flex;
   flex-direction: column;
 }
@@ -115,7 +115,7 @@
   width: 100%;
 }
 
-.taskContent p {
+.taskContent pre {
   white-space: pre-wrap;
 }
 
