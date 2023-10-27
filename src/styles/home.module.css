@@ -36,16 +36,25 @@
 }
 
 .box {
-  background-color: #fafafa;
+  width: 220px;
+  /* background-color: #fafafa; */
   padding: 14px 44px;
   border-radius: 4px;
   transition: all .4s;
+  text-align: center;
 }
 
 .box:hover {
   transform: scaleX(1.08);
 }
 
+.box:nth-child(1){
+  background-color: var(--COR_AMARELA);
+}
+
+.box:nth-child(2){
+  background-color: var(--COR_VERDE);
+}
 
 @media screen and (max-width: 580px) {
   .hero {
@@ -65,5 +74,4 @@
     margin-bottom: 14px;
     text-align: center;
   }
-
 }

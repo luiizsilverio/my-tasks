@@ -2,6 +2,7 @@ import Link from 'next/link';
 import styles from './styles.module.css';
 import { useSession, signIn, signOut } from 'next-auth/react';
 import { useEffect } from 'react';
+import Image from 'next/image';
 
 export default function Header() {
   const { data, status } = useSession();
@@ -33,7 +34,15 @@ export default function Header() {
 
         {status === "authenticated" && (
           <button className={styles.loginBtn} onClick={() => signOut({ callbackUrl: '/' })}>
-            Olá {data?.user?.name}
+            {data!.user!.image && (
+              <Image
+                src={data.user!.image }
+                width={32} height={32}
+                alt={data.user!.name!}
+                className={styles.image}
+              />
+            )}
+            <span>Olá {data?.user?.name}</span>
           </button>
         )}
 
